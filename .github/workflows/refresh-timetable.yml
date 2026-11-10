@@ -1,0 +1,29 @@
+name: Refresh classroom timetable
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
+permissions:
+  contents: read
+concurrency:
+  group: timetable-refresh
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run refresh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: classroom-site
+          path: web/
+          retention-days: 7
+          if-no-files-found: error

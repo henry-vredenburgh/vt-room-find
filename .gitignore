@@ -1,0 +1,9 @@
+node_modules/
+__pycache__/
+*.pyc
+playwright-report/
+test-results/
+web/data/current.json
+*.tmp
+
+.cache/

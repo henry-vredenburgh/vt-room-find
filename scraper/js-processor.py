@@ -3,6 +3,7 @@ from datetime import datetime
 import pprint
 import pickle
 import json
+from zoneinfo import ZoneInfo
 
 
 BUILDINGS = ['AGNEW', 'LARNA', 'AJ E', 'AJPAV', 'AQUAC', 'AA', 'ADRF', 'ARMRY', 'ART C', 'BEEF', 'BFH', 'BRNCH', 'PRC', 'BURCH', 'BUR', 'CAM', 'CARNA', 'CAM M', 'CAPRI', 'CSB', 'LIBR', 'COL', 'CMMID', 'CSSER', 'CHEMP', 'COLSQ', 'COLS2', 'CEC', 'CO', 'CIC', 'DAIRY', 'DAV', 'DER', 'DTRIK', 'DBHCC', 'DB', 'DTNA', 'DURHM', 'EGG E', 'ENGEL', 'FEM', 'FST', 'FRALN', 'FSBRN', 'GBJ', 'GOODW', 'GLCDB', 'GH', 'HAHN N', 'HAHN S', 'HARP', 'HEND', 'HILL', 'HOLD', 'HORSE', 'HABB1', 'HUTCH', 'CRCIA', 'TC', 'ICTAS', 'ILSB', 'HAN', 'JCH', 'KENT', 'KAMF', 'LANE', 'STAD', 'LATH', 'WLH', 'LEE', 'LARTS', 'LFSCI', 'LITRV', 'LYRIC', 'MAJWM', 'EMPOR', 'MCB', 'MCCOM', 'MRYMN', 'MIL', 'MAC', 'NCB', 'NEB', 'NHW', 'NEW', 'NOR', 'GRNDP', 'SEC', 'OWENS', 'PK', 'PAM', 'PAT', 'PAYNE', 'PY', 'PAB', 'PWCOM', 'PRICE', 'P HSE', 'PRINT', 'PRT E', 'PSC', 'RAND', 'RCTR1', 'ROB', 'SANDY', 'SARDO', 'SAUND', 'SEITZ', 'SHANK', 'SHEEP', 'SHULT', 'SEB', 'SL TW', 'SLUSH', 'SM CC', 'SMYTH', 'SOL', 'SQUIR', 'SURGE', 'SWINE', 'HAHN', 'TESKE', 'T101', 'CPAP', 'TORG', 'UPEST', 'VTC', 'NOVAC', 'NVC', 'VMIA', 'VM 1', 'VM 2', 'VM 3', 'VM4C1', 'WAL', 'GYM', 'WHIT', 'WMS', 'BROOK', 'BFPC']
@@ -55,10 +56,10 @@ with open('201801.js', 'w') as f:
 
         events = []
         for (start_date, end_date), block in events_block.items():
-            start = (block[0].times[0] - datetime(1900, 1, 1)).total_seconds() / 60
-            end = (block[0].times[1] - datetime(1900, 1, 1)).total_seconds() / 60
             for b in block:
-                events.append([start, end, start_date.timestamp(), end_date.timestamp(), b.day, b.room])
+                start = (b.times[0] - datetime(1900, 1, 1)).total_seconds() / 60
+                end = (b.times[1] - datetime(1900, 1, 1)).total_seconds() / 60
+                events.append([start, end, start_date.replace(tzinfo=ZoneInfo('America/New_York')).timestamp(), end_date.replace(tzinfo=ZoneInfo('America/New_York')).timestamp(), b.day, b.room])
             
         events_list.append(events)
 

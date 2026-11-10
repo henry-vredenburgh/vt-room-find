@@ -1,125 +1,122 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/nouislider.min.css">
-    <link rel="stylesheet" href="/css/bootstrap-timepicker.min.css">
-
-    <link rel="stylesheet" href="/css/main.css">
-
-    <title>Campus Cuckoo</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#630031" />
+    <meta
+      name="description"
+      content="Find Virginia Tech classrooms and view class schedules."
+    />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <title>VT Room Finder</title>
+    <link rel="stylesheet" href="./css/main.css" />
+    <script type="module" src="./js/main.js"></script>
   </head>
-  <body class="bg-light">
-    <div id="loader" class="bg-light">
-      <div class="spinner">
-        <div class="double-bounce1"></div>
-        <div class="double-bounce2"></div>
-      </div>
-    </div>
-
-    <div id="main" class="container">
-      <div class="py-5 text-center">
-        <h2 class="display-2">🐦 Campus Cuckoo</h2>
-        <p class="lead">Find the perfect study spot or classroom to hold your meetings</p>
-      </div>
-
-      <noscript>
-        <div class="alert alert-danger" role="alert">
-          Please enable JavaScript to continue
-        </div>
-      </noscript>
-
-      <main>
-        <div class="row">
-          <div class="col-md-4 order-md-2 mb-4">
-            <form>
-              <h4 class="mb-3">Where?</h4>
-              <select id="location" class="custom-select mb-3"></select>
-
-              <hr class="mb-4">
-
-              <h4 class="mb-3">When?</h4>
-
-              <div class="btn-group btn-group-toggle mb-3" data-toggle="buttons">
-                <label class="btn btn-secondary active">
-                  <input type="radio" name="day" value="U" autocomplete="off"> Su
-                </label>
-                <label class="btn btn-secondary">
-                  <input type="radio" name="day" value="M" autocomplete="off"> Mo
-                </label>
-                <label class="btn btn-secondary">
-                  <input type="radio" name="day" value="T" autocomplete="off"> Tu
-                </label>
-                <label class="btn btn-secondary">
-                  <input type="radio" name="day" value="W" autocomplete="off"> We
-                </label>
-                <label class="btn btn-secondary">
-                  <input type="radio" name="day" value="R" autocomplete="off"> Th
-                </label>
-                <label class="btn btn-secondary">
-                  <input type="radio" name="day" value="F" autocomplete="off"> Fr
-                </label>
-                <label class="btn btn-secondary">
-                  <input type="radio" name="day" value="S" autocomplete="off"> Sa
-                </label>
-              </div>
-
+  <body>
+    <header>
+      <h1>VT Room Finder</h1>
+      <p id="schedule-status" role="status">Loading class schedule…</p>
+    </header>
+    <main>
+      <div class="workspace">
+        <aside>
+          <form id="filters">
+            <div class="section-heading">
+              <h2>Filters</h2>
+              <button type="reset" class="text-button">Reset</button>
+            </div>
+            <label for="search">Building or room</label
+            ><input
+              id="search"
+              type="search"
+              placeholder="Building name, code, or room"
+              autocomplete="off"
+            />
+            <label for="building">Building</label
+            ><select id="building">
+              <option value="">All buildings</option>
+            </select>
+            <label for="date">Date</label
+            ><input id="date" type="date" required />
+            <div class="pair">
               <div>
-                <div id="time" class="mb-3"></div>
-                <div class="form-row mb-0">
-                  <div class="form-group col-6 text-center">
-                    <input type="text" class="form-control" id="time-start">
-                    <label for="time-start" class="small">From</label>
-                  </div>
-                  <div class="form-group col-6 text-center">
-                    <input type="text" class="form-control" id="time-end">
-                    <label for="time-end" class="small">To</label>
-                  </div>
-                </div>
+                <label for="start">From</label
+                ><input id="start" type="time" value="10:00" required />
               </div>
-
-              <hr class="mb-4">
-
-              <h4 class="mb-3">What?</h4>
-
-              <div class="mb-3">
-                <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="has-whiteboard">
-                  <label class="custom-control-label badge badge-pill badge-light" for="has-whiteboard">Whiteboards</label>
-                </div>
-                <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="has-chalkboard">
-                  <label class="custom-control-label badge badge-pill badge-dark" for="has-chalkboard">Chalkboards</label>
-                </div>
-                <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="has-ac">
-                  <label class="custom-control-label badge badge-pill badge-info" for="has-ac">A/C</label>
-                </div>
+              <div>
+                <label for="end">Until</label
+                ><input id="end" type="time" value="11:00" required />
               </div>
-            </form>
+            </div>
+            <p class="help">Eastern time</p>
+            <label class="check"
+              ><input id="available" type="checkbox" />
+              <span id="available-label">Only available rooms</span></label
+            >
+            <details class="more-filters">
+              <summary>More filters</summary>
+              <button id="nearby" type="button">Use my location</button>
+              <p id="location-status" class="help" role="status"></p>
+              <label for="capacity">Minimum seats</label>
+              <input id="capacity" type="number" min="0" max="10000" value="0" />
+              <fieldset>
+                <legend>Room features</legend>
+                <label class="check"><input type="checkbox" name="feature" value="FX14" /> Whiteboard</label>
+                <label class="check"><input type="checkbox" name="feature" value="FX13" /> Chalkboard</label>
+                <label class="check"><input type="checkbox" name="feature" value="PC19" /> Air conditioning</label>
+                <label class="check"><input type="checkbox" name="feature" value="PC30" /> General assignment</label>
+              </fieldset>
+              <label class="check"><input id="archive" type="checkbox" /> 2018 archive</label>
+            </details>
+          </form>
+        </aside>
+        <section class="results-section" aria-label="Room results">
+          <div class="results-header">
+            <div>
+              <p class="result-date" id="results-date"></p>
+              <h2 id="count">Loading rooms…</h2>
+            </div>
+            <span id="coverage" class="time-range"></span>
           </div>
-
-          <div class="col-md-8 order-md-1">
-            <ul id="results" class="list-group mb-3"></ul>
-            <p class="text-center small">A &#9733; marks general assignment classrooms, i.e. rooms that may be reserved by students.</p>
-          </div>
+          <p id="feedback" role="status"></p>
+          <div id="results" class="rooms"></div>
+          <button id="more" class="secondary" hidden>Show more rooms</button>
+        </section>
+      </div>
+    </main>
+    <footer>
+      <span>Campus Cuckoo · Originally by Brandon Walker</span>
+      <a href="https://www.registrar.vt.edu/faculty-staff/Room-Reservations.html" target="_blank" rel="noopener">Room reservations</a>
+    </footer>
+    <dialog id="room-dialog" aria-labelledby="room-title">
+      <div class="dialog-header">
+        <div>
+          <h2 id="room-title"></h2>
         </div>
-      </main>
-
-      <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="mb-1">&copy; 2018 <a href="https://branw.xyz">Brandon Walker</a></p>
-      </footer>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="/js/nouislider.min.js"></script>
-    <script src="/js/bootstrap-timepicker.min.js"></script>
-
-    <script src="/js/main.js"></script>
+        <button id="close" class="close" aria-label="Close room schedule">
+          ×
+        </button>
+      </div>
+      <p id="room-meta"></p>
+      <div class="day-nav">
+        <button id="previous" aria-label="Previous day">←</button
+        ><strong id="calendar-date"></strong
+        ><button id="next" aria-label="Next day">→</button>
+      </div>
+      <div class="legend">
+        <span>Scheduled</span><span id="gap-legend">Unscheduled</span>
+      </div>
+      <div id="calendar-scroll" class="calendar-scroll">
+        <div id="calendar" class="calendar"></div>
+      </div>
+      <h3>Schedule details</h3>
+      <ul id="agenda"></ul>
+    </dialog>
+    <noscript
+      ><p>
+        Enable JavaScript to search classrooms and view schedules.
+      </p></noscript
+    >
   </body>
 </html>
